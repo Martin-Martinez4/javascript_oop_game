@@ -110,10 +110,10 @@ export class StartScene extends Scene {
         ctx.fillStyle = "rgba(0,0,0,0.7)";
         ctx.fillRect(0, 0, gameWindow.width, gameWindow.height);
 
-        ctx.fillStyle = "white";
-        ctx.font = '30px Arial';
+        // ctx.fillStyle = "white";
+        // ctx.font = '30px Arial';
 
-        ctx.fillText("Start", gameWindow.width / 2, 100);
+        // ctx.fillText("Start", gameWindow.width / 2, 100);
     }
 
     handleInput(code) {
