@@ -1,4 +1,8 @@
+import { consumeUICommands, showMenuAtom, menuStyleAtom, type UICommand } from "../store/store";
 import { GameActions } from "./game";
+import { Player } from "./player";
+import { getDefaultStore } from "jotai";
+
 
 class Scene {
     constructor(name) {
@@ -22,6 +26,7 @@ class GameScene extends Scene {
         if (keys.KeyP) {
             return { action: GameActions.PUSH_SCENE, data: new PauseScene() }
         }
+      
     }
 
     render(ctx, gameWindow) {
@@ -31,7 +36,7 @@ class GameScene extends Scene {
 
         ctx.fillStyle = "blue";
         ctx.fillRect(this.player.x, this.player.y, this.player.hitBox.width, this.player.hitBox.height);
-        
+
     }
 
     handleInput(code) {
@@ -45,8 +50,21 @@ class PauseScene extends Scene {
         super("pause")
     }
 
+    handleCommand(cmd: UICommand) {
+        switch (cmd.type) {
+            case "RESUME":
+                return { action: GameActions.POP_SCENE, data: null };
+            // case "OPEN_SETTINGS":
+            //     engine.pushScene(new SettingsScene());
+            //     break;
+        }
+    }
+
     update(keys) {
         // handle menu stuff later
+        const commands = consumeUICommands();
+        const actions = commands.map(cmd => this.handleCommand(cmd));
+        return actions[0];
     }
 
     render(ctx, gameWindow) {
@@ -63,6 +81,50 @@ class PauseScene extends Scene {
             // { type: POP_SCENE }
             game.changeScene("game");
         }
+    }
+}
+
+export class StartScene extends Scene {
+    constructor() {
+        super("start");
+        const store = getDefaultStore();
+        store.set(showMenuAtom, true)
+        store.set(menuStyleAtom, "start")
+    }
+
+    handleCommand(cmd: UICommand) {
+        switch (cmd.type) {
+            case "START":
+                return { action: GameActions.PUSH_SCENE, data: new GameScene("Level 1", new Player()) };
+
+        }
+    }
+    update(keys) {
+        // handle menu stuff later
+        const commands = consumeUICommands();
+        const actions = commands.map(cmd => this.handleCommand(cmd));
+        return actions[0];
+    }
+
+    render(ctx, gameWindow) {
+        ctx.fillStyle = "rgba(0,0,0,0.7)";
+        ctx.fillRect(0, 0, gameWindow.width, gameWindow.height);
+
+        ctx.fillStyle = "white";
+        ctx.font = '30px Arial';
+
+        ctx.fillText("Start", gameWindow.width / 2, 100);
+    }
+
+    handleInput(code) {
+       
+    }
+
+    exit() {
+        const store = getDefaultStore();
+
+        store.set(showMenuAtom, false)
+        store.set(menuStyleAtom, "")
     }
 }
 

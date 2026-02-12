@@ -1,5 +1,5 @@
 import { Game } from "./game.js";
-import {GameScene} from "./scenes.js"
+import {GameScene, StartScene} from "./scenes.js"
 import { Player } from "./player.js";
 
 
@@ -41,10 +41,11 @@ export function startEngine(){
         }
     })
     
-    const player = new Player();
-    const level1 = new GameScene("Level 1", player);
+    // const player = new Player();
+    // const level1 = new GameScene("Level 1", player);
+    const startScreen = new StartScene();
     const game = new Game(ctx, gameWindow);
-    game.addScene(level1)
+    game.addScene(startScreen)
     
     
     

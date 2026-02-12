@@ -1,5 +1,6 @@
 export class GameActions {
-    static PUSH_SCENE = "push_scene"
+    static PUSH_SCENE = "push_scene";
+    static POP_SCENE = "pop_scene"
 }
 export class Game {
     constructor(ctx, gameWindow) {
@@ -12,6 +13,11 @@ export class Game {
     // addScene
     addScene(scene) {
         this.scenes.push(scene)
+    }
+
+    popScene(){
+        this.peekScene().exit()
+        this.scenes.pop()
     }
 
     peekScene() {
@@ -31,6 +37,9 @@ export class Game {
         console.log(actionObject.data)
         if (actionObject.action == GameActions.PUSH_SCENE) {
             this.transitionScenes(actionObject.data)
+        }
+        if (actionObject.action == GameActions.POP_SCENE) {
+            this.popScene();
         }
     }
 
